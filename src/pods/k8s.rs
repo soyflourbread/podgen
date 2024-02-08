@@ -55,6 +55,15 @@ pub struct Env {
     pub value: String,
 }
 
+impl Env {
+    pub fn new<T0: Into<String>, T1: Into<String>>(name: T0, value: T1) -> Self {
+        Self {
+            name: name.into(),
+            value: value.into(),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Default, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct VolumeMount {

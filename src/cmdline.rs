@@ -3,33 +3,31 @@ use clap::{Parser, Subcommand, ValueEnum};
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 pub struct Cmdline {
-    #[clap(value_enum, value_name = "POD_TYPE")]
-    pub pods: Pods,
-
     #[command(subcommand)]
     pub command: Commands,
 }
 
-#[derive(ValueEnum, Clone, Debug)]
-pub enum Pods {
-    Ghost,
-}
-
 #[derive(Subcommand, Debug)]
 pub enum Commands {
-    #[command(about = "Quickly spawn a pod for testing/development purposes")]
-    Dev {},
     #[command(
         about = "Create a pod for production",
         long_about = r#"
-Spawn a production-ready pod.
+Spawn a pod.
 
 You can then visit the pod from http://<domain>:<port>.
 However, using a reverse proxy is recommended."#
     )]
     Add {
+        #[command(subcommand)]
+        pods: Pods,
+
+        #[arg(short, long, help = "Name of the pod, e.g. wordpress")]
+        name: Option<String>,
+        #[arg(long, help = "Quickly spawn a development pod")]
+        dev: bool,
+
         #[arg(short, long, help = "Domain of the pod, e.g. example.org")]
-        domain: String,
+        domain: Option<String>,
         #[arg(short, long, help = "Host port, e.g. 8001")]
         port: u16,
     },
@@ -41,4 +39,9 @@ However, using a reverse proxy is recommended."#
         #[arg(long, help = "Remove volumes associated with the pod")]
         delete_data: bool,
     },
+}
+
+#[derive(Subcommand, Debug)]
+pub enum Pods {
+    Ghost,
 }

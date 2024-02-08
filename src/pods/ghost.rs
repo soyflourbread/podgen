@@ -12,38 +12,17 @@ impl PodGenerator for Generator {
         const DATABASE_NAME: &str = "ghost";
 
         let mut main_env = vec![
-            k8s::Env {
-                name: "database__client".to_string(),
-                value: "mysql".to_string(),
-            },
-            k8s::Env {
-                name: "database__connection__host".to_string(),
-                value: "localhost".to_string(),
-            },
-            k8s::Env {
-                name: "database__connection__database".to_string(),
-                value: DATABASE_NAME.to_string(),
-            },
-            k8s::Env {
-                name: "database__connection__user".to_string(),
-                value: "root".to_string(),
-            },
-            k8s::Env {
-                name: "database__connection__password".to_string(),
-                value: DATABASE_PASSWD.to_string(),
-            },
+            k8s::Env::new("database__client", "mysql"),
+            k8s::Env::new("database__connection__host", "localhost"),
+            k8s::Env::new("database__connection__database", DATABASE_NAME),
+            k8s::Env::new("database__connection__user", "root"),
+            k8s::Env::new("database__connection__password", DATABASE_PASSWD),
         ];
         if let Some(domain) = domain {
-            main_env.push(k8s::Env {
-                name: "url".to_string(),
-                value: format!("https://{domain}"),
-            });
+            main_env.push(k8s::Env::new("url", format!("https://{domain}")));
         }
         if !production {
-            main_env.push(k8s::Env {
-                name: "NODE_ENV".to_string(),
-                value: "development".to_string(),
-            })
+            main_env.push(k8s::Env::new("NODE_ENV", "development"));
         }
 
         let vol_main = format!("{name}-main");
