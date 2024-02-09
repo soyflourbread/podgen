@@ -12,15 +12,21 @@ impl SystemCtl {
     pub fn new() -> Self {
         Self {
             exec_path: SYSTEMCTL_DEFAULT_PATH.into(),
-            user: false,
+            user: true,
         }
     }
 
-    pub fn new_user() -> Self {
+    pub fn new_privileged() -> Self {
         Self {
             exec_path: SYSTEMCTL_DEFAULT_PATH.into(),
-            user: true,
+            user: false,
         }
+    }
+}
+
+impl Default for SystemCtl {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

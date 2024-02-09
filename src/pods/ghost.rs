@@ -1,10 +1,11 @@
-use super::{k8s, PodGenerator};
+use super::PodGenerator;
 
 pub struct Generator {}
 
+// see https://hub.docker.com/_/ghost
 impl PodGenerator for Generator {
     fn published_port() -> u16 {
-        2368 // see https://hub.docker.com/_/ghost
+        2368
     }
 
     fn generate(name: String, domain: Option<String>, production: bool) -> k8s::Config {

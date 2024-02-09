@@ -1,9 +1,10 @@
 use crate::cmdline::Commands;
+use crate::pods::PodGenerator;
 
 mod cmdline;
 
+mod info;
 mod pods;
-mod systemctl;
 
 fn main() {
     let cli = {
@@ -19,7 +20,7 @@ fn main() {
             domain,
             port,
         } => {
-            let mut builder = pods::PodBuilder::default();
+            let mut builder = info::PodInfoBuilder::default();
             if !dev {
                 builder.set_production();
             }
@@ -29,11 +30,13 @@ fn main() {
             if let Some(domain) = domain {
                 builder.set_domain(domain);
             }
+            let info = builder.build();
 
             use crate::cmdline::Pods;
             match pods {
                 Pods::Ghost => {
-                    let k8s_config = builder.build::<pods::ghost::Generator>();
+                    let k8s_config =
+                        pods::ghost::Generator::generate(info.name, info.domain, info.production);
                     println!("{}", serde_yaml::to_string(&k8s_config).unwrap());
                 }
             }

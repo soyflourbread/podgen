@@ -3,8 +3,12 @@ name = "podgen"
 version = "0.1.0"
 edition = "2021"
 
+[workspace]
+members = ["k8s", "systemctl"]
+
 [dependencies]
-serde = { version = "1.0", features = ["derive"] }
+k8s = { path = "k8s" }
+
 serde_yaml = "0.9"
 rust-ini = "0.20" # no serde support
 
